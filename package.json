@@ -1,0 +1,16 @@
+{
+  "name": "david_bradshaw-progvisfa20",
+  "author": "David Bradshaw",
+  "version": "1.0.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dabrad26/david_bradshaw-ProgVisFA20.git"
+  },
+  "scripts": {
+    "dev": "open http://127.0.0.1:8080 && npm run start",
+    "start": "http-server -p 8080 -c-1 src"
+  },
+  "devDependencies": {
+    "http-server": "^0.12.3"
+  }
+}
