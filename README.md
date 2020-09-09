@@ -2,14 +2,13 @@
 
 This is the repo for the programming vis class for Fall 2020 at pratt.
 
-<!-- ## Homework X
+## Homework 2
 
-Homework one assignment, source code can be seen in [script.js](src/script.js).  Screenshot can be found here:
+Homework two assignment.  Draws bar graph based on [CSV data](src/data.csv) from American Express for 2019 Credit Card spending.  Hover over bars to see total for that month. source code can be seen in [script.js](src/script.js).  Screenshot can be found here:
 
 ![Example](example.png)
 
 ------------
--->
 
 ## Getting started
 

@@ -2,3 +2,11 @@ body {
   font-family: 'Roboto', sans-serif;
   padding: 20px;
 }
+
+.helper-text {
+  display: none;
+}
+
+.bar-wrapper:hover > .helper-text {
+  display: block;
+}
