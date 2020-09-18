@@ -2,14 +2,13 @@
 
 This is the repo for the programming vis class for Fall 2020 at pratt.
 
-<!-- ## Homework X
+## Homework 3
 
-Homework one assignment, source code can be seen in [script.js](src/script.js).  Screenshot can be found here:
+Homework three assignment, this assignment takes data from list of hospitals that are currently open (from data.gov as of 18 September 2020) in the United States and shows a visual (by color intensity) in a Greek Cross (to represent hospital) of how many hospitals are in each state.  The red used for primary is the Red Cross color. Source code can be seen in [script.js](src/script.js).  Screenshot can be found here:
 
 ![Example](example.png)
 
 ------------
--->
 
 ## Getting started
 
