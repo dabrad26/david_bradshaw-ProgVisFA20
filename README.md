@@ -2,7 +2,7 @@
 
 This is the repo for the programming vis class for Fall 2020 at pratt.
 
-## Homework X
+## Homework 4
 
 Homework four assignment, source code can be seen in [script.js](src/script.js).  This graph shows the temperature ranges for the last since January 1, 2010.  It uses a standard color reference of temperature to visually show cold and hot while still having the left ticks explain the exact temperature. Screenshot can be found here:
 
