@@ -1,69 +1,49 @@
-const wrapper = {
-  width: 800,
-  height: 500,
-  margin: 150,
-};
-
-/** @type {Array<{DATE: Date; NAME: string; STATION: string; TMAX: number; TMIN: number}>} Full data to store globally for filtering */
-let fullData = [];
+const squareSize = 400;
+const radius = squareSize / 2;
 
 /**
  * Render the DOM based on data
  *
- * @param {Array<{DATE: Date; NAME: string; STATION: string; TMAX: number; TMIN: number}>} dataset - the processed data for rendering the DOM elements
+ * @param {{Asian: number; White: number; Black: number; LatinX: number; 'American Indian': number; Other: number}} dataset - the processed data for rendering the DOM elements
  */
 const renderDom = dataset => {
+  const colors = ['#3A9978','#E69040','#3564E6','#BDFEAB','#A03AFC','#FF799E'];
+  /** @type {{name: string; value: number}[]} */
+  const pieData = Object.keys(dataset).map((key, index) => {
+    return {
+      name: key,
+      color: colors[index],
+      value: dataset[key],
+    };
+  });
 
-  // Empty the view for quick render as we will append/remove items
-  const domWrapper = document.querySelector('.graph-area');
-  if (domWrapper) {
-    while (domWrapper.firstChild) {
-      domWrapper.removeChild(domWrapper.firstChild);
-    }
-  }
-
-  /** Colors based on this image http://lucykatecrochet.com/wp-content/uploads/2017/02/temp-head.jpg */
-  const tempColorRange = d3.scaleLinear().domain([-10, 110]).range(['#5c1fb5', '#ea3423']);
-
-  const xScale = d3.scaleTime()
-    .domain(d3.extent(dataset, d => d.DATE))
-    .range([0, wrapper.width - wrapper.margin]);
-
-  const yScale = d3.scaleLinear()
-    .domain([d3.min(dataset, d => d.TMIN), d3.max(dataset, d => d.TMAX)])
-    .range([wrapper.height - wrapper.margin, 0]);
+  const pie = d3.pie().value(d => d.value);
 
   const svgElement = d3
     .select('.graph-area')
     .append('svg')
-    .attr('width', `${wrapper.width}px`)
-    .attr('height', `${wrapper.height}px`);
+    .attr('width', `${squareSize}px`)
+    .attr('height', `${squareSize}px`);
 
-  const svgGroup = svgElement.append('g')
-    .attr('transform', `translate(${wrapper.margin / 2}, ${wrapper.margin / 2})`);
+  const keyItems = pieData.map(data => {
+    return `<div class="key-item">
+      <div class="key-item--color" style="background-color: ${data.color};"></div>
+      <div class="key-item--text">${data.name}</div>
+    </div>`
+  });
 
-  svgGroup.append('g').call(d3.axisLeft(yScale).tickFormat(d => `${d}° F`));
-  svgGroup.append('g').attr('transform', `translate(0, ${wrapper.height - wrapper.margin})`).call(d3.axisBottom(xScale));
+  document.querySelector('.key-area').innerHTML = keyItems.join('');
 
-  svgGroup.selectAll('circle')
-    .data(dataset)
+  const arc = d3.arc()
+    .innerRadius(0)
+    .outerRadius((radius));
+
+  svgElement.append('g')
+    .attr('transform', `translate(${squareSize / 2}, ${squareSize / 2})`)
+    .selectAll('arc')
+    .data(pie(pieData))
     .enter()
-    .append('circle')
-    .attr('r', 2)
-    .attr('cx', d => xScale(d.DATE))
-    .attr('cy', d => yScale(d.TMAX))
-    .attr('fill', d => tempColorRange(d.TMAX));
-
-  svgGroup.selectAll('circle')
-    .data(dataset)
-    .enter()
-    .append('circle')
-    .attr('r', 2)
-    .attr('cx', d => xScale(d.DATE))
-    .attr('cy', d => yScale(d.TMIN))
-    .attr('fill', d => tempColorRange(d.TMIN));
-
-    svgGroup.selectAll('circle')
+    .append('g')
     .on('mouseover', (event, d) => {
       d3.select('#tooltip-wrapper')
         .transition()
@@ -71,50 +51,47 @@ const renderDom = dataset => {
         .style('opacity', 1)
         .style('left', `${event.pageX + 4}px`)
         .style('top', `${event.pageY + 4}px`)
-        .text(`${d.DATE.toLocaleDateString()}\nHigh: ${d.TMAX}° F\nLow: ${d.TMIN}° F`);
-     })
+        .text(`${d.data.name} (${d.data.value})`);
+    })
     .on('mouseout', () =>{
       d3.select('#tooltip-wrapper')
         .transition()
         .style('opacity', 0);
     })
-    .on('mousemove', (event, d) =>{
+    .on('mousemove', event => {
       d3.select('#tooltip-wrapper')
         .style('left', `${event.pageX + 4}px`)
         .style('top', `${event.pageY + 4}px`)
-    });
+    })
+    .append('path')
+    .attr('fill', d => d.data.color)
+    .attr('d', arc);
 };
-
-$('.year-range').slider({
-  range: true,
-  min: 2000,
-  max: 2020,
-  values: [ 2000, 2020 ],
-  slide: (_event, ui) => {
-    console.log($('.year-range-info .min-value'));
-    $('.year-range-info .min-value').text(ui.values[0]);
-    $('.year-range-info .max-value').text(ui.values[1]);
-    renderDom(fullData.filter(data => {
-      const currentYear = data.DATE.getFullYear();
-      return !!(currentYear >= ui.values[0] && currentYear <= ui.values[1]);
-    }))
-  },
-});
-
 
 /**
  * Read CSV file and start D3
  */
 d3.csv('data.csv').then(csvData => {
-  fullData = csvData.map(data => {
-    data.TMAX = Number(data.TMAX);
-    data.TMIN = Number(data.TMIN);
-    data.DATE = d3.timeParse('%Y-%m-%d')(data.DATE);
-    fullData = data;
-    return data;
-  });
-  $('.load-hide').removeClass('load-hide');
-  renderDom(fullData);
+
+  const totalDeaths = {
+    Asian: 0,
+    White: 0,
+    Black: 0,
+    LatinX: 0,
+    'American Indian': 0,
+    Other: 0,
+  };
+
+  csvData.forEach(data => {
+    totalDeaths.Asian += (Number(data.Deaths_Asian) + Number(data.Deaths_NHPI));
+    totalDeaths.White += Number(data.Deaths_White);
+    totalDeaths.Black += Number(data.Deaths_Black);
+    totalDeaths.LatinX += Number(data.Deaths_LatinX);
+    totalDeaths['American Indian'] += Number(data.Deaths_AIAN);
+    totalDeaths.Other += (Number(data.Deaths_Other) + Number(data.Deaths_Multiracial) + Number(data.Deaths_Unknown));
+  })
+
+  renderDom(totalDeaths);
 }).catch(error => {
   console.error('Failed to read CSV file', error);
 });

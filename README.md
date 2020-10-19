@@ -2,9 +2,9 @@
 
 This is the repo for the programming vis class for Fall 2020 at pratt.
 
-## Homework 5
+## Homework 6
 
-Homework five assignment, source code can be seen in [script.js](src/script.js).  This graph shows the temperature ranges for the last since January 1, 2000.  It uses a standard color reference of temperature to visually show cold and hot while still having the left ticks explain the exact temperature. This takes the work from Homework 4 and adds interactivity to it with a slider that changes the date (filters) and a hover that shows the data of each point.  Animated GIF can be found here:
+Homework six assignment, source code can be seen in [script.js](src/script.js).  This chart is a D3 pie chart using data on COVID-19 deaths.  Colors are randomly chosen from Adobe Colors and hover was added for interactivity to show the total deaths.  Animated GIF can be found here:
 
 ![Example](example.gif)
 

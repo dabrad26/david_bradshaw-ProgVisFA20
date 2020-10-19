@@ -3,30 +3,6 @@ body {
   padding: 20px;
 }
 
-.year-range {
-  max-width: 800px;
-}
-
-.load-hide {
-  display: none;
-}
-
-.year-range-info {
-  display: flex;
-  max-width: 800px;
-  width: 100%;
-  margin: 16px 0;
-}
-
-.year-range-info .min-value,
-.year-range-info .max-value {
-  flex: 1;
-}
-
-.year-range-info .max-value {
-  text-align: right;
-}
-
 #tooltip-wrapper {
   position: fixed;
   background: #FFFFFF;
@@ -34,4 +10,25 @@ body {
   padding: 4px;
   white-space: pre-line;
   opacity: 0;
+}
+
+.content-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 60px;
+}
+
+.key-area {
+  padding: 116px 0 0 110px;
+}
+
+.key-item {
+  display: flex;
+  margin-bottom: 10px;
+}
+
+.key-item--color {
+  width: 16px;
+  height: 16px;
+  margin-right: 10px;
 }
